@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lüks Sohbet Deneyimi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+        
+        :root {
+            --primary-color: #6C5CE7;
+            --secondary-color: #A29BFE;
+            --background-color: #F9F9F9;
+            --text-color: #2D3436;
+            --accent-color: #FFA801;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .chat-container {
+            width: 95%;
+            max-width: 1300px;
+            background: var(--background-color);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .chat-body {
+            display: flex;
+            height: 75vh;
+        }
+        
+        .sidebar {
+            width: 300px;
+            background-color: #FFF;
+            padding: 25px;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        
+        .online-users {
+            margin-bottom: 30px;
+        }
+        
+        .online-users h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .user-list {
+            list-style-type: none;
+        }
+        
+        .user-list li {
+            padding: 12px 0;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            margin-right: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .admin-panel {
+            display: none;
+        }
+        
+        .admin-panel h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .admin-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .admin-button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background-color: #F0F3F8;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .message-content {
+            background-color: #FFF;
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 70%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .message.own {
+            justify-content: flex-end;
+        }
+        
+        .message.own .message-content {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 25px;
+            background-color: white;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .chat-input input {
+            flex-grow: 1;
+            padding: 15px 20px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 30px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+        
+        .chat-input button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            margin-left: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .chat-input button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        #fileInputLabel {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        #fileInputLabel:hover {
+            background-color: #FF9000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .login-form {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .login-form h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .login-form button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .login-form button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .chat-body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+            }
+            
+            .chat-messages {
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-form">
+            <h2>Hoş Geldiniz!</h2>
+            <input type="text" id="usernameInput" placeholder="Kullanıcı adınızı girin">
+            <button onclick="login()">Giriş Yap</button>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            Lüks Sohbet Deneyimi
+        </div>
+        <div class="chat-body">
+            <div class="sidebar">
+                <div class="online-users">
+                    <h3>Çevrimiçi Kullanıcılar</h3>
+                    <ul class="user-list" id="onlineUsersList">
+                        <!-- Kullanıcılar dinamik olarak buraya eklenecek -->
+                    </ul>
+                </div>
+                <div class="admin-panel" id="adminPanel">
+                    <h3>Admin Paneli</h3>
+                    <button class="admin-button" onclick="showDeleteMessageDialog()">Mesaj Sil</button>
+                    <button class="admin-button" onclick="showChangeUsernameDialog()">Kullanıcı Adı Değiştir</button>
+                    <button class="admin-button" onclick="showKickUserDialog()">Kullanıcı At</button>
+                    <button class="admin-button" onclick="showIPAddresses()">IP'leri Göster</button>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Mesajlar dinamik olarak buraya eklenecek -->
+            </div>
+        </div>
+        <div class="chat-input">
+            <label for="fileInput" id="fileInputLabel">📎</label>
+            <input type="file" id="fileInput" accept="image/*,video/*">
+            <input type="text" id="messageInput" placeholder="Mesajınızı yazın...">
+            <button onclick="sendMessage()">Gönder</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9q7CVsc6wlpgUoMpssNJyIJ9TqQ7IQeY",
+            authDomain: "my-chat-app-97365.firebaseapp.com",
+            databaseURL: "https://my-chat-app-97365-default-rtdb.firebaseio.com",
+            projectId: "my-chat-app-97365",
+            storageBucket: "my-chat-app-97365.appspot.com",
+            messagingSenderId: "968416953406",
+            appId: "1:968416953406:web:9e11d5bc3bbff0ffb23d6f"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const storage = firebase.storage();
+        let currentUser = null;
+        let isAdmin = false;
+
+        function login() {
+            const username = document.getElementById('usernameInput').value;
+            if (username) {
+                currentUser = username;
+                document.getElementById('loginOverlay').style.display = 'none';
+                // Add Firebase authentication logic here if needed
+            }
+        }
+
+        function sendMessage() {
+            const message = document.getElementById('messageInput').value;
+            if (message) {
+                if (message === '623023' && !isAdmin) {
+                    isAdmin = true;
+                    document.getElementById('adminPanel').style.display = 'block';
+                    alert('Admin paneli etkinleştirildi!');
+                } else {
+                    // Send message to Firebase
+                    database.ref('messages').push({
+                        user: currentUser,
+                        text: message,
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                    });
+                }
+                document.getElementById('messageInput').value = '';
+            }
+        }
+
+        function showDeleteMessageDialog() {
+            const messageId = prompt("Silmek istediğiniz mesajın ID'sini girin:");
+            if (messageId) {
+                database.ref('messages/' + messageId).remove()
+                .then(() => alert("Mesaj silindi"))
+                .catch((error) => alert("Mesaj silinirken hata: " + error.message));
+            }
+        }
+
+        function showChangeUsernameDialog() {
+            const newUsername = prompt("Yeni kullanıcı adınızı girin:");
+            if (newUsername) {
+                database.ref('users/' + currentUser).update({ username: newUsername })
+                .then(() => {
+                    currentUser = newUsername;
+                    alert("Kullanıcı adı değiştirildi");
+                })
+                .catch((error) => alert("Kullanıcı adı değiştirilirken hata: " + error.message));
+            }
+        }
+
+        function showKickUserDialog() {
+            const usernameToKick = prompt("Atmak istediğiniz kullanıcının adını girin:");
+            if (usernameToKick) {
+                database.ref('users/' + usernameToKick).remove()
+                .then(() => alert("Kullanıcı atıldı"))
+                .catch((error) => alert("Kullanıcı atılırken hata: " + error.message));
+            }
+        }
+
+        function showIPAddresses() {
+            database.ref('users').once('value', (snapshot) => {
+                const users = snapshot.val();
+                let ipAddresses = "";
+                for (const user in users) {
+                    ipAddresses += `${user}: ${users[user].ip}\n`;
+                }
+                alert(ipAddresses);
+            });
+        }
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const storageRef = storage.ref('uploads/' + file.name);
+                storageRef.put(file).then((snapshot) => {
+                    storageRef.getDownloadURL().then((url) => {
+                        database.ref('messages').push({
+                            user: currentUser,
+                            text: `<img src="${url}" alt="${file.name}" />`,
+                            timestamp: firebase.database.ServerValue.TIMESTAMP
+                        });
+                    });
+                });
+            }
+        });
+
+        // Listen for messages from Firebase
+        database.ref('messages').on('child_added', (snapshot) => {
+            const message = snapshot.val();
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            if (message.user === currentUser) {
+                messageElement.classList.add('own');
+            }
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('message-content');
+            messageContent.innerHTML = `${message.user}: ${message.text}`;
+            messageElement.appendChild(messageContent);
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
+
+        // Add logic for showing online users if needed
+
+    </script>
+</body>
+</html>

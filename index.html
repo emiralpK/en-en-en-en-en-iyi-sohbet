@@ -627,7 +627,7 @@
                         const fileType = file.type.split('/')[0];
                         let messageText;
                         if (fileType === 'image') {
-                            messageText = `<img src="${url}" alt="${file.name}" style="max-width: 200px; max-height: 200px;" />`;
+                            messageText = `<img src="${url}" alt="${file.name}" style="max-width: 200px; max-height: 200px;" onclick="openImage('${url}')" />`;
                         } else if (fileType === 'video') {
                             messageText = `<video controls style="max-width: 200px; max-height: 200px;">
                                             <source src="${url}" type="${file.type}">
@@ -645,6 +645,11 @@
                 });
             }
         });
+
+        function openImage(url) {
+            const imageWindow = window.open("");
+            imageWindow.document.write(`<img src="${url}" style="width:100%;">`);
+        }
 
         function showDMOverlay() {
             document.getElementById('dmOverlay').style.display = 'flex';

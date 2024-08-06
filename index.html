@@ -306,6 +306,16 @@
         </div>
     </div>
 
+    <div class="login-overlay" id="adminLoginOverlay" style="display: none;">
+        <div class="login-form">
+            <h2>Admin Girişi</h2>
+            <input type="text" id="adminPasswordInput" placeholder="Admin şifresini girin">
+            <input type="text" id="adminUsernameInput" placeholder="Admin kullanıcı adınızı girin" style="display: none;">
+            <button id="adminLoginButton" onclick="checkAdminPassword()">Şifreyi Onayla</button>
+            <button id="adminUsernameButton" onclick="adminLogin()" style="display: none;">Giriş Yap</button>
+        </div>
+    </div>
+
     <div class="chat-container">
         <div class="chat-header">
             Lüks Sohbet Deneyimi
@@ -323,7 +333,10 @@
                     <button class="admin-button" onclick="showDeleteMessageDialog()">Mesaj Sil</button>
                     <button class="admin-button" onclick="showChangeUsernameDialog()">Kullanıcı Adı Değiştir</button>
                     <button class="admin-button" onclick="showKickUserDialog()">Kullanıcı At</button>
-                    <button class="admin-button" onclick="showIPAddresses()">IP'leri Göster</button>
+                    <h3>Çevrimiçi Kullanıcılar ve IP Adresleri</h3>
+                    <ul class="user-list" id="adminUsersList">
+                        <!-- Admin kullanıcı listesi dinamik olarak buraya eklenecek -->
+                    </ul>
                 </div>
             </div>
             <div class="chat-messages" id="chatMessages">
@@ -364,25 +377,45 @@
             if (username) {
                 currentUser = username;
                 document.getElementById('loginOverlay').style.display = 'none';
-                // Add Firebase authentication logic here if needed
+                if (username === '623023') {
+                    document.getElementById('adminLoginOverlay').style.display = 'flex';
+                } else {
+                    updateUserStatus(currentUser, true);
+                }
+            }
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPasswordInput').value;
+            if (password === '623023') {
+                document.getElementById('adminPasswordInput').style.display = 'none';
+                document.getElementById('adminUsernameInput').style.display = 'block';
+                document.getElementById('adminLoginButton').style.display = 'none';
+                document.getElementById('adminUsernameButton').style.display = 'block';
+            } else {
+                alert('Yanlış şifre!');
+            }
+        }
+
+        function adminLogin() {
+            const adminUsername = document.getElementById('adminUsernameInput').value;
+            if (adminUsername) {
+                isAdmin = true;
+                currentUser = adminUsername;
+                document.getElementById('adminLoginOverlay').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                updateUserStatus(currentUser, true);
             }
         }
 
         function sendMessage() {
             const message = document.getElementById('messageInput').value;
             if (message) {
-                if (message === '623023' && !isAdmin) {
-                    isAdmin = true;
-                    document.getElementById('adminPanel').style.display = 'block';
-                    alert('Admin paneli etkinleştirildi!');
-                } else {
-                    // Send message to Firebase
-                    database.ref('messages').push({
-                        user: currentUser,
-                        text: message,
-                        timestamp: firebase.database.ServerValue.TIMESTAMP
-                    });
-                }
+                database.ref('messages').push({
+                    user: currentUser,
+                    text: message,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
                 document.getElementById('messageInput').value = '';
             }
         }
@@ -417,26 +450,25 @@
             }
         }
 
-        function showIPAddresses() {
-            database.ref('users').once('value', (snapshot) => {
-                const users = snapshot.val();
-                let ipAddresses = "";
-                for (const user in users) {
-                    ipAddresses += `${user}: ${users[user].ip}\n`;
-                }
-                alert(ipAddresses);
-            });
-        }
-
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const storageRef = storage.ref('uploads/' + file.name);
                 storageRef.put(file).then((snapshot) => {
                     storageRef.getDownloadURL().then((url) => {
+                        const fileType = file.type.split('/')[0];
+                        let messageText;
+                        if (fileType === 'image') {
+                            messageText = `<img src="${url}" alt="${file.name}" style="max-width: 200px; max-height: 200px;" />`;
+                        } else if (fileType === 'video') {
+                            messageText = `<video controls style="max-width: 200px; max-height: 200px;">
+                                            <source src="${url}" type="${file.type}">
+                                            Tarayıcınız video etiketini desteklemiyor.
+                                           </video>`;
+                        }
                         database.ref('messages').push({
                             user: currentUser,
-                            text: `<img src="${url}" alt="${file.name}" />`,
+                            text: messageText,
                             timestamp: firebase.database.ServerValue.TIMESTAMP
                         });
                     });
@@ -461,7 +493,36 @@
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         });
 
-        // Add logic for showing online users if needed
+        // Update online users list
+        function updateUserStatus(username, status) {
+            const userRef = database.ref('users/' + username);
+            userRef.set({
+                username: username,
+                status: status,
+                ip: '192.168.1.1' // Dummy IP, should be dynamically fetched
+            });
+            userRef.onDisconnect().remove();
+        }
+
+        // Listen for online users from Firebase
+        database.ref('users').on('value', (snapshot) => {
+            const users = snapshot.val();
+            const onlineUsersList = document.getElementById('onlineUsersList');
+            const adminUsersList = document.getElementById('adminUsersList');
+            onlineUsersList.innerHTML = '';
+            adminUsersList.innerHTML = '';
+            for (const user in users) {
+                const userElement = document.createElement('li');
+                userElement.textContent = users[user].username;
+                onlineUsersList.appendChild(userElement);
+
+                if (isAdmin) {
+                    const adminUserElement = document.createElement('li');
+                    adminUserElement.textContent = `${users[user].username} (IP: ${users[user].ip})`;
+                    adminUsersList.appendChild(adminUserElement);
+                }
+            }
+        });
 
     </script>
 </body>

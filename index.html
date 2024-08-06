@@ -29,11 +29,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
         
         .chat-container {
-            width: 95%;
+            width: 100%;
             max-width: 1300px;
+            height: 95vh;
             background: var(--background-color);
             border-radius: 30px;
             overflow: hidden;
@@ -54,7 +56,8 @@
         
         .chat-body {
             display: flex;
-            height: 75vh;
+            flex: 1;
+            height: calc(100% - 160px);
         }
         
         .sidebar {
@@ -65,22 +68,22 @@
             overflow-y: auto;
         }
         
-        .online-users, .all-users, .dm-list {
+        .online-users, .all-users, .dm-list, .group-chat-list {
             margin-bottom: 30px;
         }
         
-        .online-users h3, .all-users h3, .dm-list h3 {
+        .online-users h3, .all-users h3, .dm-list h3, .group-chat-list h3 {
             font-size: 20px;
             margin-bottom: 15px;
             color: var(--primary-color);
             font-weight: 600;
         }
         
-        .user-list {
+        .user-list, .group-list {
             list-style-type: none;
         }
         
-        .user-list li {
+        .user-list li, .group-list li {
             padding: 12px 0;
             display: flex;
             align-items: center;
@@ -88,7 +91,7 @@
             cursor: pointer;
         }
         
-        .user-avatar {
+        .user-avatar, .group-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -153,10 +156,8 @@
             border-radius: 20px;
             max-width: 70%;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        
-        .message.own {
-            justify-content: flex-end;
+            display: flex;
+            align-items: center;
         }
         
         .message.own .message-content {
@@ -164,6 +165,22 @@
             color: white;
         }
         
+        .message.own {
+            justify-content: flex-end;
+        }
+
+        .message img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        .message.own img {
+            margin-left: 15px;
+            margin-right: 0;
+        }
+
         .chat-input {
             display: flex;
             padding: 25px;
@@ -204,7 +221,7 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
+
         #fileInput {
             display: none;
         }
@@ -226,7 +243,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
-        .login-overlay, .profile-overlay, .guest-form-overlay, .dm-overlay {
+        .login-overlay, .profile-overlay, .guest-form-overlay, .dm-overlay, .group-chat-overlay, .edit-profile-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -239,12 +256,14 @@
             z-index: 1000;
         }
         
-        .login-form, .profile-form, .guest-form, .dm-form {
+        .login-form, .profile-form, .guest-form, .dm-form, .group-chat-form, .edit-profile-form {
             background: white;
             padding: 40px;
             border-radius: 20px;
             text-align: center;
             animation: fadeIn 0.5s ease-out;
+            width: 100%;
+            max-width: 400px;
         }
         
         @keyframes fadeIn {
@@ -252,12 +271,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .login-form h2, .profile-form h2, .guest-form h2, .dm-form h2 {
+        .login-form h2, .profile-form h2, .guest-form h2, .dm-form h2, .group-chat-form h2, .edit-profile-form h2 {
             margin-bottom: 20px;
             color: var(--primary-color);
         }
         
-        .login-form input, .profile-form input, .guest-form input, .dm-form input {
+        .login-form input, .profile-form input, .guest-form input, .dm-form input, .group-chat-form input, .edit-profile-form input {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -266,7 +285,7 @@
             font-size: 16px;
         }
         
-        .login-form button, .profile-form button, .guest-form button, .dm-form button {
+        .login-form button, .profile-form button, .guest-form button, .dm-form button, .group-chat-form button, .edit-profile-form button {
             background-color: var(--primary-color);
             color: white;
             border: none;
@@ -277,15 +296,15 @@
             font-size: 16px;
         }
         
-        .login-form button:hover, .profile-form button:hover, .guest-form button:hover, .dm-form button:hover {
+        .login-form button:hover, .profile-form button:hover, .guest-form button:hover, .dm-form button:hover, .group-chat-form button:hover, .edit-profile-form button:hover {
             background-color: var(--secondary-color);
         }
 
-        .profile-form input[type="file"] {
+        .profile-form input[type="file"], .edit-profile-form input[type="file"] {
             display: none;
         }
 
-        .profile-form label[for="profilePhoto"] {
+        .profile-form label[for="profilePhoto"], .edit-profile-form label[for="editProfilePhoto"] {
             background-color: var(--accent-color);
             color: white;
             padding: 10px 20px;
@@ -295,7 +314,7 @@
             font-size: 16px;
         }
         
-        .profile-form label[for="profilePhoto"]:hover {
+        .profile-form label[for="profilePhoto"]:hover, .edit-profile-form label[for="editProfilePhoto"]:hover {
             background-color: #FF9000;
         }
         
@@ -330,6 +349,7 @@
             <h2>Hoş Geldiniz!</h2>
             <button onclick="showGuestLoginForm()">Misafir Olarak Giriş Yap</button>
             <button onclick="showSignUpForm()">Hesap Oluştur</button>
+            <button onclick="showSignInForm()">Giriş Yap</button>
         </div>
     </div>
 
@@ -343,12 +363,21 @@
 
     <div class="profile-overlay" id="profileOverlay" style="display: none;">
         <div class="profile-form">
-            <h2>Profil Oluşturun</h2>
+            <h2>Hesap Oluştur</h2>
             <input type="text" id="profileUsernameInput" placeholder="Kullanıcı adınızı girin">
             <label for="profilePhoto">Profil Fotoğrafı Seç</label>
             <input type="file" id="profilePhotoInput" accept="image/*">
             <input type="password" id="profilePasswordInput" placeholder="Şifre girin">
-            <button onclick="createProfile()">Profil Oluştur</button>
+            <button onclick="createProfile()">Hesap Oluştur</button>
+        </div>
+    </div>
+
+    <div class="profile-overlay" id="signInOverlay" style="display: none;">
+        <div class="profile-form">
+            <h2>Giriş Yap</h2>
+            <input type="text" id="signInUsernameInput" placeholder="Kullanıcı adınızı girin">
+            <input type="password" id="signInPasswordInput" placeholder="Şifrenizi girin">
+            <button onclick="signIn()">Giriş Yap</button>
         </div>
     </div>
 
@@ -358,6 +387,25 @@
             <input type="text" id="dmUsernameInput" placeholder="Kullanıcı adını girin">
             <input type="text" id="dmMessageInput" placeholder="Mesajınızı yazın">
             <button onclick="sendDM()">Gönder</button>
+        </div>
+    </div>
+
+    <div class="group-chat-overlay" id="groupChatOverlay" style="display: none;">
+        <div class="group-chat-form">
+            <h2>Grup Sohbeti Oluştur</h2>
+            <input type="text" id="groupChatNameInput" placeholder="Grup adını girin">
+            <button onclick="createGroupChat()">Oluştur</button>
+        </div>
+    </div>
+
+    <div class="edit-profile-overlay" id="editProfileOverlay" style="display: none;">
+        <div class="edit-profile-form">
+            <h2>Profil Düzenle</h2>
+            <input type="text" id="editUsernameInput" placeholder="Yeni kullanıcı adınızı girin">
+            <label for="editProfilePhoto">Yeni Profil Fotoğrafı Seç</label>
+            <input type="file" id="editProfilePhotoInput" accept="image/*">
+            <input type="password" id="editPasswordInput" placeholder="Yeni şifrenizi girin">
+            <button onclick="editProfile()">Profil Düzenle</button>
         </div>
     </div>
 
@@ -389,6 +437,18 @@
                         <!-- Tüm kullanıcılar dinamik olarak buraya eklenecek -->
                     </ul>
                 </div>
+                <div class="dm-list">
+                    <h3>Özel Mesajlar</h3>
+                    <ul class="user-list" id="dmList">
+                        <!-- Özel mesajlar dinamik olarak buraya eklenecek -->
+                    </ul>
+                </div>
+                <div class="group-chat-list">
+                    <h3>Grup Sohbetleri</h3>
+                    <ul class="group-list" id="groupChatList">
+                        <!-- Grup sohbetleri dinamik olarak buraya eklenecek -->
+                    </ul>
+                </div>
                 <div class="admin-panel" id="adminPanel">
                     <h3>Admin Paneli</h3>
                     <button class="admin-button" onclick="showDeleteMessageDialog()">Mesaj Sil</button>
@@ -406,8 +466,8 @@
         </div>
         <div class="chat-input">
             <label for="fileInput" id="fileInputLabel">📎</label>
-            <input type="file" id="fileInput" accept="image/*,video/*">
-            <input type="text" id="messageInput" placeholder="Mesajınızı yazın...">
+            <input type="file" id="fileInput" accept="image/*,video/*,application/pdf">
+            <input type="text" id="messageInput" placeholder="Mesajınızı yazın..." onkeypress="checkEnter(event)">
             <button onclick="sendMessage()">Gönder</button>
         </div>
     </div>
@@ -442,6 +502,11 @@
         function showSignUpForm() {
             document.getElementById('loginOverlay').style.display = 'none';
             document.getElementById('profileOverlay').style.display = 'flex';
+        }
+
+        function showSignInForm() {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('signInOverlay').style.display = 'flex';
         }
 
         function guestLogin() {
@@ -494,6 +559,21 @@
             } else {
                 alert('Lütfen kullanıcı adı, şifre ve profil fotoğrafı seçiniz.');
             }
+        }
+
+        function signIn() {
+            const signInUsername = document.getElementById('signInUsernameInput').value;
+            const signInPassword = document.getElementById('signInPasswordInput').value;
+            database.ref('users/' + signInUsername).get().then((snapshot) => {
+                if (snapshot.exists() && snapshot.val().password === signInPassword) {
+                    currentUser = signInUsername;
+                    currentUserProfile = snapshot.val();
+                    document.getElementById('signInOverlay').style.display = 'none';
+                    updateUserStatus(currentUser, true, false);
+                } else {
+                    alert('Yanlış kullanıcı adı veya şifre!');
+                }
+            });
         }
 
         function sendMessage() {
@@ -553,6 +633,8 @@
                                             <source src="${url}" type="${file.type}">
                                             Tarayıcınız video etiketini desteklemiyor.
                                            </video>`;
+                        } else if (fileType === 'application') {
+                            messageText = `<a href="${url}" target="_blank">${file.name}</a>`;
                         }
                         database.ref('messages').push({
                             user: currentUser,
@@ -586,6 +668,65 @@
             }
         }
 
+        function showGroupChatOverlay() {
+            document.getElementById('groupChatOverlay').style.display = 'flex';
+        }
+
+        function createGroupChat() {
+            const groupChatName = document.getElementById('groupChatNameInput').value;
+            if (groupChatName) {
+                const groupId = database.ref('groupChats').push().key;
+                database.ref('groupChats/' + groupId).set({
+                    name: groupChatName,
+                    members: {
+                        [currentUser]: true
+                    }
+                });
+                document.getElementById('groupChatOverlay').style.display = 'none';
+                alert("Grup sohbeti oluşturuldu!");
+                loadGroupChats();
+            } else {
+                alert('Lütfen grup adı giriniz.');
+            }
+        }
+
+        function editProfile() {
+            const newUsername = document.getElementById('editUsernameInput').value;
+            const newPassword = document.getElementById('editPasswordInput').value;
+            const newProfilePhoto = document.getElementById('editProfilePhotoInput').files[0];
+
+            if (newUsername || newPassword || newProfilePhoto) {
+                const updates = {};
+                if (newUsername) {
+                    updates.username = newUsername;
+                }
+                if (newPassword) {
+                    updates.password = newPassword;
+                }
+                if (newProfilePhoto) {
+                    const storageRef = storage.ref('profile_photos/' + newProfilePhoto.name);
+                    storageRef.put(newProfilePhoto).then((snapshot) => {
+                        storageRef.getDownloadURL().then((url) => {
+                            updates.photoURL = url;
+                            database.ref('users/' + currentUser).update(updates).then(() => {
+                                currentUserProfile = { ...currentUserProfile, ...updates };
+                                document.getElementById('editProfileOverlay').style.display = 'none';
+                                alert("Profil güncellendi!");
+                            });
+                        });
+                    });
+                } else {
+                    database.ref('users/' + currentUser).update(updates).then(() => {
+                        currentUserProfile = { ...currentUserProfile, ...updates };
+                        document.getElementById('editProfileOverlay').style.display = 'none';
+                        alert("Profil güncellendi!");
+                    });
+                }
+            } else {
+                alert('Lütfen en az bir alanı doldurun.');
+            }
+        }
+
         // Listen for messages from Firebase
         database.ref('messages').on('child_added', (snapshot) => {
             const message = snapshot.val();
@@ -597,7 +738,10 @@
             }
             const messageContent = document.createElement('div');
             messageContent.classList.add('message-content');
-            messageContent.innerHTML = `${message.user}: ${message.text}`;
+            const userPhoto = document.createElement('img');
+            userPhoto.src = currentUserProfile.photoURL;
+            messageContent.appendChild(userPhoto);
+            messageContent.innerHTML += `${message.user}: ${message.text}`;
             messageElement.appendChild(messageContent);
             messagesContainer.appendChild(messageElement);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -648,11 +792,44 @@
             }
         });
 
+        // Listen for group chats from Firebase
+        function loadGroupChats() {
+            database.ref('groupChats').on('value', (snapshot) => {
+                const groups = snapshot.val();
+                const groupChatList = document.getElementById('groupChatList');
+                groupChatList.innerHTML = '';
+                for (const groupId in groups) {
+                    const groupElement = document.createElement('li');
+                    const groupPhoto = document.createElement('div');
+                    groupPhoto.classList.add('group-avatar');
+                    groupPhoto.style.backgroundImage = `url('default-group.png')`;
+                    groupElement.appendChild(groupPhoto);
+                    groupElement.append(groups[groupId].name);
+                    groupElement.onclick = () => openGroupChat(groupId);
+                    groupChatList.appendChild(groupElement);
+                }
+            });
+        }
+
+        function openGroupChat(groupId) {
+            // Implement group chat functionality here
+            alert(`Grup sohbeti açıldı: ${groupId}`);
+        }
+
         function openPrivateChat(username) {
             // Implement private chat functionality here
             showDMOverlay();
             document.getElementById('dmUsernameInput').value = username;
         }
+
+        function checkEnter(event) {
+            if (event.keyCode === 13) {
+                sendMessage();
+            }
+        }
+
+        // Load group chats initially
+        loadGroupChats();
     </script>
 </body>
 </html>

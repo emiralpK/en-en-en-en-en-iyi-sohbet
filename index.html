@@ -744,7 +744,7 @@
             const messageContent = document.createElement('div');
             messageContent.classList.add('message-content');
             const userPhoto = document.createElement('img');
-            userPhoto.src = currentUserProfile.photoURL;
+            userPhoto.src = message.user === currentUser ? currentUserProfile.photoURL : 'default-avatar.png'; // Use default avatar for other users
             messageContent.appendChild(userPhoto);
             messageContent.innerHTML += `${message.user}: ${message.text}`;
             messageElement.appendChild(messageContent);

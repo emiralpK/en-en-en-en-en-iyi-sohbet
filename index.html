@@ -3,479 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lüks Sohbet Deneyimi</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
-        
-        :root {
-            --primary-color: #6C5CE7;
-            --secondary-color: #A29BFE;
-            --background-color: #F9F9F9;
-            --text-color: #2D3436;
-            --accent-color: #FFA801;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        
-        .chat-container {
-            width: 100%;
-            max-width: 1300px;
-            height: 95vh;
-            background: var(--background-color);
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .chat-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 25px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        
-        .chat-body {
-            display: flex;
-            flex: 1;
-            height: calc(100% - 160px);
-        }
-        
-        .sidebar {
-            width: 300px;
-            background-color: #FFF;
-            padding: 25px;
-            border-right: 1px solid rgba(0,0,0,0.1);
-            overflow-y: auto;
-        }
-        
-        .online-users, .all-users, .dm-list, .group-chat-list {
-            margin-bottom: 30px;
-        }
-        
-        .online-users h3, .all-users h3, .dm-list h3, .group-chat-list h3 {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        .user-list, .group-list {
-            list-style-type: none;
-        }
-        
-        .user-list li, .group-list li {
-            padding: 12px 0;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            cursor: pointer;
-        }
-        
-        .user-avatar, .group-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--accent-color);
-            margin-right: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: 600;
-            font-size: 18px;
-        }
-        
-        .admin-panel {
-            display: none;
-        }
-        
-        .admin-panel h3 {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        .admin-button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        .admin-button:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .chat-messages {
-            flex-grow: 1;
-            padding: 30px;
-            overflow-y: auto;
-            background-color: #F0F3F8;
-        }
-        
-        .message {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: flex-start;
-        }
-        
-        .message-content {
-            background-color: #FFF;
-            padding: 15px 20px;
-            border-radius: 20px;
-            max-width: 70%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-        }
-        
-        .message.own .message-content {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .message.own {
-            justify-content: flex-end;
-        }
-
-        .message img {
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            margin-right: 15px;
-        }
-
-        .message.own img {
-            margin-left: 15px;
-            margin-right: 0;
-        }
-
-        .chat-input {
-            display: flex;
-            padding: 25px;
-            background-color: white;
-            border-top: 1px solid rgba(0,0,0,0.1);
-        }
-        
-        .chat-input input {
-            flex-grow: 1;
-            padding: 15px 20px;
-            border: 2px solid var(--secondary-color);
-            border-radius: 30px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .chat-input input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
-        }
-        
-        .chat-input button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 30px;
-            margin-left: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        .chat-input button:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        #fileInput {
-            display: none;
-        }
-        
-        #fileInputLabel {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-right: 15px;
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
-        
-        #fileInputLabel:hover {
-            background-color: #FF9000;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .login-overlay, .profile-overlay, .guest-form-overlay, .dm-overlay, .group-chat-overlay, .edit-profile-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .login-form, .profile-form, .guest-form, .dm-form, .group-chat-form, .edit-profile-form {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            animation: fadeIn 0.5s ease-out;
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .login-form h2, .profile-form h2, .guest-form h2, .dm-form h2, .group-chat-form h2, .edit-profile-form h2 {
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-        
-        .login-form input, .profile-form input, .guest-form input, .dm-form input, .group-chat-form input, .edit-profile-form input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 2px solid var(--secondary-color);
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        
-        .login-form button, .profile-form button, .guest-form button, .dm-form button, .group-chat-form button, .edit-profile-form button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
-        
-        .login-form button:hover, .profile-form button:hover, .guest-form button:hover, .dm-form button:hover, .group-chat-form button:hover, .edit-profile-form button:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .profile-form input[type="file"], .edit-profile-form input[type="file"] {
-            display: none;
-        }
-
-        .profile-form label[for="profilePhoto"], .edit-profile-form label[for="editProfilePhoto"] {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
-        
-        .profile-form label[for="profilePhoto"]:hover, .edit-profile-form label[for="editProfilePhoto"]:hover {
-            background-color: #FF9000;
-        }
-        
-        .dm-list {
-            height: 200px;
-            overflow-y: auto;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        @media (max-width: 768px) {
-            .chat-body {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid rgba(0,0,0,0.1);
-            }
-            
-            .chat-messages {
-                height: 50vh;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-form">
-            <h2>Hoş Geldiniz!</h2>
-            <button onclick="showGuestLoginForm()">Misafir Olarak Giriş Yap</button>
-            <button onclick="showSignUpForm()">Hesap Oluştur</button>
-            <button onclick="showSignInForm()">Giriş Yap</button>
-        </div>
-    </div>
-
-    <div class="guest-form-overlay" id="guestFormOverlay" style="display: none;">
-        <div class="guest-form">
-            <h2>Misafir Girişi</h2>
-            <input type="text" id="guestUsernameInput" placeholder="Kullanıcı adınızı girin">
-            <button onclick="guestLogin()">Giriş Yap</button>
-        </div>
-    </div>
-
-    <div class="profile-overlay" id="profileOverlay" style="display: none;">
-        <div class="profile-form">
-            <h2>Hesap Oluştur</h2>
-            <input type="text" id="profileUsernameInput" placeholder="Kullanıcı adınızı girin">
-            <label for="profilePhoto">Profil Fotoğrafı Seç</label>
-            <input type="file" id="profilePhotoInput" accept="image/*">
-            <input type="password" id="profilePasswordInput" placeholder="Şifre girin">
-            <button onclick="createProfile()">Hesap Oluştur</button>
-        </div>
-    </div>
-
-    <div class="profile-overlay" id="signInOverlay" style="display: none;">
-        <div class="profile-form">
-            <h2>Giriş Yap</h2>
-            <input type="text" id="signInUsernameInput" placeholder="Kullanıcı adınızı girin">
-            <input type="password" id="signInPasswordInput" placeholder="Şifrenizi girin">
-            <button onclick="signIn()">Giriş Yap</button>
-        </div>
-    </div>
-
-    <div class="dm-overlay" id="dmOverlay" style="display: none;">
-        <div class="dm-form">
-            <h2>Özel Mesaj Gönder</h2>
-            <input type="text" id="dmUsernameInput" placeholder="Kullanıcı adını girin">
-            <input type="text" id="dmMessageInput" placeholder="Mesajınızı yazın">
-            <button onclick="sendDM()">Gönder</button>
-        </div>
-    </div>
-
-    <div class="group-chat-overlay" id="groupChatOverlay" style="display: none;">
-        <div class="group-chat-form">
-            <h2>Grup Sohbeti Oluştur</h2>
-            <input type="text" id="groupChatNameInput" placeholder="Grup adını girin">
-            <button onclick="createGroupChat()">Oluştur</button>
-        </div>
-    </div>
-
-    <div class="edit-profile-overlay" id="editProfileOverlay" style="display: none;">
-        <div class="edit-profile-form">
-            <h2>Profil Düzenle</h2>
-            <input type="text" id="editUsernameInput" placeholder="Yeni kullanıcı adınızı girin">
-            <label for="editProfilePhoto">Yeni Profil Fotoğrafı Seç</label>
-            <input type="file" id="editProfilePhotoInput" accept="image/*">
-            <input type="password" id="editPasswordInput" placeholder="Yeni şifrenizi girin">
-            <button onclick="editProfile()">Profil Düzenle</button>
-        </div>
-    </div>
-
-    <div class="login-overlay" id="adminLoginOverlay" style="display: none;">
-        <div class="login-form">
-            <h2>Admin Girişi</h2>
-            <input type="text" id="adminPasswordInput" placeholder="Admin şifresini girin">
-            <input type="text" id="adminUsernameInput" placeholder="Admin kullanıcı adınızı girin" style="display: none;">
-            <button id="adminLoginButton" onclick="checkAdminPassword()">Şifreyi Onayla</button>
-            <button id="adminUsernameButton" onclick="adminLogin()" style="display: none;">Giriş Yap</button>
-        </div>
-    </div>
-
-    <div class="chat-container">
-        <div class="chat-header">
-            Lüks Sohbet Deneyimi
-        </div>
-        <div class="chat-body">
-            <div class="sidebar">
-                <div class="online-users">
-                    <h3>Çevrimiçi Kullanıcılar</h3>
-                    <ul class="user-list" id="onlineUsersList">
-                        <!-- Kullanıcılar dinamik olarak buraya eklenecek -->
-                    </ul>
-                </div>
-                <div class="all-users">
-                    <h3>Tüm Kullanıcılar</h3>
-                    <ul class="user-list" id="allUsersList">
-                        <!-- Tüm kullanıcılar dinamik olarak buraya eklenecek -->
-                    </ul>
-                </div>
-                <div class="dm-list">
-                    <h3>Özel Mesajlar</h3>
-                    <ul class="user-list" id="dmList">
-                        <!-- Özel mesajlar dinamik olarak buraya eklenecek -->
-                    </ul>
-                </div>
-                <div class="group-chat-list">
-                    <h3>Grup Sohbetleri</h3>
-                    <ul class="group-list" id="groupChatList">
-                        <!-- Grup sohbetleri dinamik olarak buraya eklenecek -->
-                    </ul>
-                </div>
-                <div class="admin-panel" id="adminPanel">
-                    <h3>Admin Paneli</h3>
-                    <button class="admin-button" onclick="showDeleteMessageDialog()">Mesaj Sil</button>
-                    <button class="admin-button" onclick="showChangeUsernameDialog()">Kullanıcı Adı Değiştir</button>
-                    <button class="admin-button" onclick="showKickUserDialog()">Kullanıcı At</button>
-                    <h3>Çevrimiçi Kullanıcılar ve IP Adresleri</h3>
-                    <ul class="user-list" id="adminUsersList">
-                        <!-- Admin kullanıcı listesi dinamik olarak buraya eklenecek -->
-                    </ul>
-                </div>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <!-- Mesajlar dinamik olarak buraya eklenecek -->
-            </div>
-        </div>
-        <div class="chat-input">
-            <label for="fileInput" id="fileInputLabel">📎</label>
-            <input type="file" id="fileInput" accept="image/*,video/*,application/pdf">
-            <input type="text" id="messageInput" placeholder="Mesajınızı yazın..." onkeypress="checkEnter(event)">
-            <button onclick="sendMessage()">Gönder</button>
-        </div>
-    </div>
-
+    <title>Lüks Chat Uygulaması</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); }
+        .chat-container { height: calc(100vh - 240px); }
+        .message-bubble { max-width: 70%; word-break: break-word; }
+        .message-bubble img, .message-bubble video { max-width: 200px; max-height: 200px; }
+        .admin-panel { display: none; }
+        .emoji-picker { display: none; position: absolute; bottom: 60px; right: 0; background: white; border: 1px solid #ddd; border-radius: 5px; padding: 5px; }
+        .emoji { cursor: pointer; font-size: 20px; padding: 5px; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="container mx-auto p-4 max-w-4xl bg-white rounded-lg shadow-2xl">
+        <h1 class="text-4xl font-bold mb-6 text-center text-gradient bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">Lüks Chat Uygulaması</h1>
+        
+        <div id="loginArea" class="mb-8">
+            <input type="text" id="username" placeholder="Kullanıcı Adı" class="w-full p-3 mb-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-purple-400 focus:border-transparent">
+            <button onclick="login()" class="w-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white p-3 rounded-lg hover:opacity-90 transition duration-300 transform hover:scale-105">Giriş Yap</button>
+        </div>
+
+        <div id="chatArea" class="hidden">
+            <div id="messages" class="chat-container overflow-y-auto bg-gray-100 p-4 mb-4 border rounded-lg shadow-inner"></div>
+            <div class="flex space-x-2 relative">
+                <input type="text" id="messageInput" placeholder="Mesajınızı yazın" class="flex-grow p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-purple-400 focus:border-transparent">
+                <input type="file" id="fileInput" accept="image/*,video/*" class="hidden">
+                <button onclick="document.getElementById('fileInput').click()" class="bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition duration-300 transform hover:scale-105"><i class="fas fa-paperclip"></i></button>
+                <button onclick="toggleEmojiPicker()" class="bg-yellow-500 text-white p-3 rounded-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105"><i class="fas fa-smile"></i></button>
+                <button onclick="sendMessage()" class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white p-3 rounded-lg hover:opacity-90 transition duration-300 transform hover:scale-105"><i class="fas fa-paper-plane"></i></button>
+                <div id="emojiPicker" class="emoji-picker">
+                    <span class="emoji" onclick="addEmoji('😊')">😊</span>
+                    <span class="emoji" onclick="addEmoji('😂')">😂</span>
+                    <span class="emoji" onclick="addEmoji('❤️')">❤️</span>
+                    <span class="emoji" onclick="addEmoji('👍')">👍</span>
+                    <span class="emoji" onclick="addEmoji('🎉')">🎉</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="adminPanel" class="admin-panel mt-8 bg-gray-100 p-6 rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold mb-4 text-gradient bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">Admin Paneli</h2>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">İstatistikler</h3>
+                    <p id="totalMessages" class="mb-1">Toplam Mesaj: 0</p>
+                    <p id="totalUsers" class="mb-1">Toplam Kullanıcı: 0</p>
+                    <p id="totalMedia" class="mb-1">Toplam Medya: 0</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Hızlı İşlemler</h3>
+                    <button onclick="deleteAllMessages()" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition duration-300 w-full mb-2">Tüm Mesajları Sil</button>
+                    <button onclick="banUser()" class="bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition duration-300 w-full">Kullanıcı Banla</button>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold mb-2">Son Aktiviteler</h3>
+                <ul id="activityLog" class="list-disc list-inside"></ul>
+            </div>
+        </div>
+    </div>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyD9q7CVsc6wlpgUoMpssNJyIJ9TqQ7IQeY",
@@ -490,351 +82,145 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const storage = firebase.storage();
+
+        const loginArea = document.getElementById('loginArea');
+        const chatArea = document.getElementById('chatArea');
+        const adminPanel = document.getElementById('adminPanel');
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const fileInput = document.getElementById('fileInput');
+        const emojiPicker = document.getElementById('emojiPicker');
+
         let currentUser = null;
-        let currentUserProfile = null;
-        let isAdmin = false;
+        let stats = { messages: 0, users: 0, media: 0 };
 
-        function showGuestLoginForm() {
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('guestFormOverlay').style.display = 'flex';
-        }
-
-        function showSignUpForm() {
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('profileOverlay').style.display = 'flex';
-        }
-
-        function showSignInForm() {
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('signInOverlay').style.display = 'flex';
-        }
-
-        function guestLogin() {
-            const guestUsername = document.getElementById('guestUsernameInput').value;
-            if (guestUsername) {
-                currentUser = guestUsername;
-                document.getElementById('guestFormOverlay').style.display = 'none';
-                updateUserStatus(currentUser, true, true);
+        function login() {
+            const username = document.getElementById('username').value;
+            if (username.trim() === '') {
+                alert('Lütfen bir kullanıcı adı girin');
+                return;
             }
-        }
-
-        function checkAdminPassword() {
-            const password = document.getElementById('adminPasswordInput').value;
-            if (password === '623023') {
-                document.getElementById('adminPasswordInput').style.display = 'none';
-                document.getElementById('adminUsernameInput').style.display = 'block';
-                document.getElementById('adminLoginButton').style.display = 'none';
-                document.getElementById('adminUsernameButton').style.display = 'block';
-            } else {
-                alert('Yanlış şifre!');
+            if (username === '623023') {
+                adminPanel.style.display = 'block';
+                updateAdminStats();
             }
+            currentUser = username;
+            loginArea.style.display = 'none';
+            chatArea.style.display = 'block';
+            loadMessages();
+            logActivity(`${username} giriş yaptı`);
         }
 
-        function adminLogin() {
-            const adminUsername = document.getElementById('adminUsernameInput').value;
-            if (adminUsername) {
-                isAdmin = true;
-                currentUser = adminUsername;
-                document.getElementById('adminLoginOverlay').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                updateUserStatus(currentUser, true, false);
-            }
-        }
+        async function sendMessage() {
+            const message = messageInput.value;
+            const file = fileInput.files[0];
+            
+            if (message.trim() === '' && !file) return;
 
-        function createProfile() {
-            const profileUsername = document.getElementById('profileUsernameInput').value;
-            const profilePhoto = document.getElementById('profilePhotoInput').files[0];
-            const profilePassword = document.getElementById('profilePasswordInput').value;
-            if (profileUsername && profilePhoto && profilePassword) {
-                const storageRef = storage.ref('profile_photos/' + profilePhoto.name);
-                storageRef.put(profilePhoto).then((snapshot) => {
-                    storageRef.getDownloadURL().then((url) => {
-                        currentUserProfile = { username: profileUsername, photoURL: url, password: profilePassword };
-                        database.ref('users/' + profileUsername).set(currentUserProfile);
-                        document.getElementById('profileOverlay').style.display = 'none';
-                        currentUser = profileUsername;
-                        updateUserStatus(currentUser, true, false);
-                    });
-                });
-            } else {
-                alert('Lütfen kullanıcı adı, şifre ve profil fotoğrafı seçiniz.');
-            }
-        }
+            let fileUrl = '';
+            let fileType = '';
 
-        function signIn() {
-            const signInUsername = document.getElementById('signInUsernameInput').value;
-            const signInPassword = document.getElementById('signInPasswordInput').value;
-            database.ref('users/' + signInUsername).get().then((snapshot) => {
-                if (snapshot.exists() && snapshot.val().password === signInPassword) {
-                    currentUser = signInUsername;
-                    currentUserProfile = snapshot.val();
-                    document.getElementById('signInOverlay').style.display = 'none';
-                    updateUserStatus(currentUser, true, false);
-                } else {
-                    alert('Yanlış kullanıcı adı veya şifre!');
-                }
-            });
-        }
-
-        function sendMessage() {
-            const message = document.getElementById('messageInput').value;
-            if (message) {
-                database.ref('messages').push({
-                    user: currentUser,
-                    text: message,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                });
-                document.getElementById('messageInput').value = '';
-            }
-        }
-
-        function showDeleteMessageDialog() {
-            const messageId = prompt("Silmek istediğiniz mesajın ID'sini girin:");
-            if (messageId) {
-                database.ref('messages/' + messageId).remove()
-                .then(() => alert("Mesaj silindi"))
-                .catch((error) => alert("Mesaj silinirken hata: " + error.message));
-            }
-        }
-
-        function showChangeUsernameDialog() {
-            const newUsername = prompt("Yeni kullanıcı adınızı girin:");
-            if (newUsername) {
-                database.ref('users/' + currentUser).update({ username: newUsername })
-                .then(() => {
-                    currentUser = newUsername;
-                    alert("Kullanıcı adı değiştirildi");
-                })
-                .catch((error) => alert("Kullanıcı adı değiştirilirken hata: " + error.message));
-            }
-        }
-
-        function showKickUserDialog() {
-            const usernameToKick = prompt("Atmak istediğiniz kullanıcının adını girin:");
-            if (usernameToKick) {
-                database.ref('users/' + usernameToKick).remove()
-                .then(() => alert("Kullanıcı atıldı"))
-                .catch((error) => alert("Kullanıcı atılırken hata: " + error.message));
-            }
-        }
-
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
             if (file) {
-                const storageRef = storage.ref('uploads/' + file.name);
-                storageRef.put(file).then((snapshot) => {
-                    storageRef.getDownloadURL().then((url) => {
-                        const fileType = file.type.split('/')[0];
-                        let messageText;
-                        if (fileType === 'image') {
-                            messageText = `<img src="${url}" alt="${file.name}" style="max-width: 200px; max-height: 200px;" onclick="openImage('${url}')" />`;
-                        } else if (fileType === 'video') {
-                            messageText = `<video controls style="max-width: 200px; max-height: 200px;">
-                                            <source src="${url}" type="${file.type}">
-                                            Tarayıcınız video etiketini desteklemiyor.
-                                           </video>`;
-                        } else if (fileType === 'application') {
-                            messageText = `<a href="${url}" target="_blank">${file.name}</a>`;
-                        }
-                        database.ref('messages').push({
-                            user: currentUser,
-                            text: messageText,
-                            timestamp: firebase.database.ServerValue.TIMESTAMP
-                        });
-                    });
-                });
+                const fileRef = storage.ref('uploads/' + Date.now() + '_' + file.name);
+                await fileRef.put(file);
+                fileUrl = await fileRef.getDownloadURL();
+                fileType = file.type.startsWith('image') ? 'image' : 'video';
+                stats.media++;
             }
-        });
 
-        function openImage(url) {
-            const imageWindow = window.open("");
-            imageWindow.document.write(`<img src="${url}" style="width:100%;">`);
+            database.ref('messages').push({
+                username: currentUser,
+                message: message,
+                timestamp: Date.now(),
+                fileUrl: fileUrl,
+                fileType: fileType
+            });
+
+            messageInput.value = '';
+            fileInput.value = '';
+            stats.messages++;
+            updateAdminStats();
         }
 
-        function showDMOverlay() {
-            document.getElementById('dmOverlay').style.display = 'flex';
-        }
-
-        function sendDM() {
-            const dmUsername = document.getElementById('dmUsernameInput').value;
-            const dmMessage = document.getElementById('dmMessageInput').value;
-            if (dmUsername && dmMessage) {
-                database.ref('dm/' + currentUser + '_' + dmUsername).push({
-                    sender: currentUser,
-                    receiver: dmUsername,
-                    text: dmMessage,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                });
-                document.getElementById('dmMessageInput').value = '';
-                document.getElementById('dmOverlay').style.display = 'none';
-                alert("Özel mesaj gönderildi!");
-            } else {
-                alert('Lütfen kullanıcı adı ve mesajı giriniz.');
-            }
-        }
-
-        function showGroupChatOverlay() {
-            document.getElementById('groupChatOverlay').style.display = 'flex';
-        }
-
-        function createGroupChat() {
-            const groupChatName = document.getElementById('groupChatNameInput').value;
-            if (groupChatName) {
-                const groupId = database.ref('groupChats').push().key;
-                database.ref('groupChats/' + groupId).set({
-                    name: groupChatName,
-                    members: {
-                        [currentUser]: true
+        function loadMessages() {
+            const messagesRef = database.ref('messages');
+            messagesRef.on('child_added', (snapshot) => {
+                const data = snapshot.val();
+                const messageElement = document.createElement('div');
+                messageElement.className = `message-bubble ${data.username === currentUser ? 'ml-auto' : 'mr-auto'} mb-4 p-3 rounded-lg ${data.username === currentUser ? 'bg-purple-100' : 'bg-gray-200'}`;
+                
+                let content = `<strong class="text-purple-600">${data.username}:</strong> ${data.message}`;
+                
+                if (data.fileUrl) {
+                    if (data.fileType === 'image') {
+                        content += `<br><img src="${data.fileUrl}" alt="Yüklenen resim" class="mt-2 rounded shadow">`;
+                    } else if (data.fileType === 'video') {
+                        content += `<br><video src="${data.fileUrl}" controls class="mt-2 rounded shadow"></video>`;
                     }
-                });
-                document.getElementById('groupChatOverlay').style.display = 'none';
-                alert("Grup sohbeti oluşturuldu!");
-                loadGroupChats();
-            } else {
-                alert('Lütfen grup adı giriniz.');
-            }
-        }
-
-        function editProfile() {
-            const newUsername = document.getElementById('editUsernameInput').value;
-            const newPassword = document.getElementById('editPasswordInput').value;
-            const newProfilePhoto = document.getElementById('editProfilePhotoInput').files[0];
-
-            if (newUsername || newPassword || newProfilePhoto) {
-                const updates = {};
-                if (newUsername) {
-                    updates.username = newUsername;
                 }
-                if (newPassword) {
-                    updates.password = newPassword;
-                }
-                if (newProfilePhoto) {
-                    const storageRef = storage.ref('profile_photos/' + newProfilePhoto.name);
-                    storageRef.put(newProfilePhoto).then((snapshot) => {
-                        storageRef.getDownloadURL().then((url) => {
-                            updates.photoURL = url;
-                            database.ref('users/' + currentUser).update(updates).then(() => {
-                                currentUserProfile = { ...currentUserProfile, ...updates };
-                                document.getElementById('editProfileOverlay').style.display = 'none';
-                                alert("Profil güncellendi!");
-                            });
-                        });
-                    });
-                } else {
-                    database.ref('users/' + currentUser).update(updates).then(() => {
-                        currentUserProfile = { ...currentUserProfile, ...updates };
-                        document.getElementById('editProfileOverlay').style.display = 'none';
-                        alert("Profil güncellendi!");
-                    });
-                }
-            } else {
-                alert('Lütfen en az bir alanı doldurun.');
-            }
-        }
-
-        // Listen for messages from Firebase
-        database.ref('messages').on('child_added', (snapshot) => {
-            const message = snapshot.val();
-            const messagesContainer = document.getElementById('chatMessages');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            if (message.user === currentUser) {
-                messageElement.classList.add('own');
-            }
-            const messageContent = document.createElement('div');
-            messageContent.classList.add('message-content');
-            const userPhoto = document.createElement('img');
-            userPhoto.src = message.user === currentUser ? currentUserProfile.photoURL : 'default-avatar.png'; // Use default avatar for other users
-            messageContent.appendChild(userPhoto);
-            messageContent.innerHTML += `${message.user}: ${message.text}`;
-            messageElement.appendChild(messageContent);
-            messagesContainer.appendChild(messageElement);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        });
-
-        // Update online users list
-        function updateUserStatus(username, status, isGuest) {
-            const userRef = database.ref('users/' + username);
-            userRef.set({
-                username: currentUserProfile?.username || username,
-                status: status,
-                ip: '192.168.1.1', // Dummy IP, should be dynamically fetched
-                photoURL: currentUserProfile?.photoURL || 'default-avatar.png',
-                isGuest: isGuest
-            });
-            userRef.onDisconnect().remove();
-        }
-
-        // Listen for online users from Firebase
-        database.ref('users').on('value', (snapshot) => {
-            const users = snapshot.val();
-            const onlineUsersList = document.getElementById('onlineUsersList');
-            const allUsersList = document.getElementById('allUsersList');
-            const adminUsersList = document.getElementById('adminUsersList');
-            onlineUsersList.innerHTML = '';
-            allUsersList.innerHTML = '';
-            adminUsersList.innerHTML = '';
-            for (const user in users) {
-                const userElement = document.createElement('li');
-                const userPhoto = document.createElement('div');
-                userPhoto.classList.add('user-avatar');
-                userPhoto.style.backgroundImage = `url(${users[user].photoURL})`;
-                userElement.appendChild(userPhoto);
-                userElement.append(users[user].username);
-                userElement.onclick = () => openPrivateChat(user);
-
-                allUsersList.appendChild(userElement);
-
-                if (users[user].status) {
-                    onlineUsersList.appendChild(userElement.cloneNode(true));
-                }
-
-                if (isAdmin) {
-                    const adminUserElement = document.createElement('li');
-                    adminUserElement.textContent = `${users[user].username} (IP: ${users[user].ip})`;
-                    adminUsersList.appendChild(adminUserElement);
-                }
-            }
-        });
-
-        // Listen for group chats from Firebase
-        function loadGroupChats() {
-            database.ref('groupChats').on('value', (snapshot) => {
-                const groups = snapshot.val();
-                const groupChatList = document.getElementById('groupChatList');
-                groupChatList.innerHTML = '';
-                for (const groupId in groups) {
-                    const groupElement = document.createElement('li');
-                    const groupPhoto = document.createElement('div');
-                    groupPhoto.classList.add('group-avatar');
-                    groupPhoto.style.backgroundImage = `url('default-group.png')`;
-                    groupElement.appendChild(groupPhoto);
-                    groupElement.append(groups[groupId].name);
-                    groupElement.onclick = () => openGroupChat(groupId);
-                    groupChatList.appendChild(groupElement);
-                }
+                
+                messageElement.innerHTML = content;
+                messagesDiv.appendChild(messageElement);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
             });
         }
 
-        function openGroupChat(groupId) {
-            // Implement group chat functionality here
-            alert(`Grup sohbeti açıldı: ${groupId}`);
+        function deleteAllMessages() {
+            if (confirm('Tüm mesajları silmek istediğinizden emin misiniz?')) {
+                database.ref('messages').remove();
+                messagesDiv.innerHTML = '';
+                stats.messages = 0;
+                stats.media = 0;
+                updateAdminStats();
+                logActivity('Tüm mesajlar silindi');
+            }
         }
 
-        function openPrivateChat(username) {
-            // Implement private chat functionality here
-            showDMOverlay();
-            document.getElementById('dmUsernameInput').value = username;
+        function banUser() {
+            const userToBan = prompt('Banlanacak kullanıcının adını girin:');
+            if (userToBan) {
+                // Gerçek uygulamada burada kullanıcı banlama işlemi yapılır
+                logActivity(`${userToBan} kullanıcısı banlandı`);
+            }
         }
 
-        function checkEnter(event) {
-            if (event.keyCode === 13) {
+        function updateAdminStats() {
+            document.getElementById('totalMessages').textContent = `Toplam Mesaj: ${stats.messages}`;
+            document.getElementById('totalUsers').textContent = `Toplam Kullanıcı: ${stats.users}`;
+            document.getElementById('totalMedia').textContent = `Toplam Medya: ${stats.media}`;
+        }
+
+        function logActivity(activity) {
+            const activityLog = document.getElementById('activityLog');
+            const li = document.createElement('li');
+            li.textContent = `${new Date().toLocaleTimeString()} - ${activity}`;
+            activityLog.insertBefore(li, activityLog.firstChild);
+        }
+
+        function toggleEmojiPicker() {
+            emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addEmoji(emoji) {
+            messageInput.value += emoji;
+            toggleEmojiPicker();
+        }
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
                 sendMessage();
             }
-        }
+        });
 
-        // Load group chats initially
-        loadGroupChats();
+        // Kullanıcı sayısını takip et
+        database.ref('messages').on('value', (snapshot) => {
+            const messages = snapshot.val();
+            if (messages) {
+                const uniqueUsers = new Set(Object.values(messages).map(msg => msg.username));
+                stats.users = uniqueUsers.size;
+                updateAdminStats();
+            }
+        });
     </script>
 </body>
 </html>

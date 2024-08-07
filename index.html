@@ -90,7 +90,8 @@
         const messageInput = document.getElementById('messageInput');
         const fileInput = document.getElementById('fileInput');
         const emojiPicker = document.getElementById('emojiPicker');
-
+        const totalUsersElement = document.getElementById('totalUsers');
+        
         let currentUser = null;
         let stats = { messages: 0, users: 0, media: 0 };
 
@@ -101,14 +102,17 @@
                 return;
             }
             if (username === '623023') {
+                currentUser = 'admin';
                 adminPanel.style.display = 'block';
                 updateAdminStats();
+            } else {
+                currentUser = username;
             }
-            currentUser = username;
             loginArea.style.display = 'none';
             chatArea.style.display = 'block';
             loadMessages();
-            logActivity(`${username} giriş yaptı`);
+            logActivity(`${currentUser} giriş yaptı`);
+            updateUserCount(1);
         }
 
         async function sendMessage() {
@@ -149,7 +153,12 @@
                 const messageElement = document.createElement('div');
                 messageElement.className = `message-bubble ${data.username === currentUser ? 'ml-auto' : 'mr-auto'} mb-4 p-3 rounded-lg ${data.username === currentUser ? 'bg-purple-100' : 'bg-gray-200'}`;
                 
-                let content = `<strong class="text-purple-600">${data.username}:</strong> ${data.message}`;
+                let usernameDisplay = data.username;
+                if (data.username === 'admin') {
+                    usernameDisplay = '<strong class="text-red-600">admin</strong>';
+                }
+
+                let content = `<strong class="text-purple-600">${usernameDisplay}:</strong> ${data.message}`;
                 
                 if (data.fileUrl) {
                     if (data.fileType === 'image') {
@@ -221,6 +230,11 @@
                 updateAdminStats();
             }
         });
+
+        function updateUserCount(delta) {
+            stats.users += delta;
+            totalUsersElement.textContent = `Toplam Kullanıcı: ${stats.users}`;
+        }
     </script>
 </body>
 </html>
